@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react'
 
 import { IChildHeights, useChildsDidUpdate } from 'childs-told-parent'
 import 'childs-told-parent/dist/index.css'
+import { useDispatch } from 'react-redux'
+import { appActions } from './redux-store/slice'
 
 const rawChildsList: string[] = ['child1', 'child2', 'child3']
 
@@ -23,10 +25,7 @@ const App: React.FC<{}> = () => {
     setHeight(newHeight + 20)
   }
 
-  const [onChildUpdated] = useChildsDidUpdate(
-    childsList.length,
-    onAllChildsReady
-  )
+  const [] = useChildsDidUpdate(childsList.length, onAllChildsReady)
   const handleInpuBlur = (e: React.FocusEvent<any>) => {
     const newValue = e.currentTarget.value
     const newList = [...childsList, newValue]
@@ -44,7 +43,7 @@ const App: React.FC<{}> = () => {
         }}
       >
         {childsList.map((x) => (
-          <ChildHasChanges key={x} onChildUpdated={onChildUpdated} id={x} />
+          <ChildHasChanges key={x} />
         ))}
         Parent Height : {height} (Chils Heights + 20)
       </div>
@@ -57,21 +56,35 @@ const App: React.FC<{}> = () => {
 }
 
 interface IChildProps {
-  onChildUpdated: (key: string, newHeight: number) => void
   id: string
 }
 
-const ChildHasChanges: React.FC<IChildProps> = ({ id, onChildUpdated }) => {
+const ChildHasChanges: React.FC<IChildProps> = ({ id }) => {
+  const dispatch = useDispatch()
   const [counter, setCounter] = useState(50)
   const childRef = React.useRef<HTMLDivElement | any>()
   useDidUpdate(() => {
     debugger
-    if (childRef.current) onChildUpdated(id, childRef.current!.offsetHeight)
+    if (childRef.current) {
+      dispatch(
+        appActions.setChildHeight({
+          key: id,
+          newHeight: childRef.current!.offsetHeight
+        })
+      )
+    }
   }, [counter])
 
   useEffect(() => {
     debugger
-    if (childRef.current) onChildUpdated(id, childRef.current!.offsetHeight)
+    if (childRef.current) {
+      dispatch(
+        appActions.setChildHeight({
+          key: id,
+          newHeight: childRef.current!.offsetHeight
+        })
+      )
+    }
   }, [])
 
   const updateCount = () => {
