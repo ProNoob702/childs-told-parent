@@ -30,11 +30,27 @@ const App: React.FC<{}> = () => {
   }
 
   return (
-    <form onSubmit={(e) => submit(e)}>
-      <h1>File Upload</h1>
-      <input type='file' multiple onChange={(e) => handleSetFile(e)} />
-      <button type='submit'>Upload</button>
-    </form>
+    <div>
+      <form onSubmit={(e) => submit(e)}>
+        <h1>File Upload</h1>
+        <input type='file' multiple onChange={(e) => handleSetFile(e)} />
+        <button type='submit'>Upload</button>
+      </form>
+      <div
+        style={{
+          width: 400,
+          height: 400,
+          overflow: 'hidden'
+        }}
+      >
+        <img src={`${backendUrl}/01F62TV5Q778M211E9SESN1JY0/0`} alt='cool' />
+      </div>
+      <div>
+        <a href={`${backendUrl}/01F62TV5Q778M211E9SESN1JY0/1`} download>
+          Click to download
+        </a>
+      </div>
+    </div>
   )
 }
 
